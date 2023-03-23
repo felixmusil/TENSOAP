@@ -262,7 +262,12 @@ def set_variable_values_PS(args):
             sys.exit(0)
         xyz_slice = [args.slice[0],args.slice[1]]
 
-    return [nmax,lmax,rc,sg,cen,spec,cw,lam,periodic,ncut,sparsefile,frames,subset,sparse_options,outfile,args.initial,atomic,all_radial,not args.uselist,xyz_slice,args.imag,args.nonorm,args.vol_frac]
+    return [
+        nmax,lmax,rc,sg,cen,
+        spec,cw,lam,periodic,ncut,
+        sparsefile,frames,subset,sparse_options,outfile,
+        args.initial,atomic,all_radial,not args.uselist,xyz_slice,
+        args.imag,args.nonorm,args.vol_frac]
 
 #########################################################################
 

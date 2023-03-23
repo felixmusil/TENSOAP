@@ -51,9 +51,9 @@ cdef void _initsoapmolecule(long nspecies,
                     ):
 
     # Py_ssize_t is the correct C type for Python array indexes
-    cdef Py_ssize_t icentype,centype,icen,cen,ispe,ineigh,neigh,lval,mval,im,n 
+    cdef Py_ssize_t icentype,centype,icen,cen,ispe,ineigh,neigh,lval,mval,im,n
     cdef double rx,ry,rz,ph,th,r2,rdist
- 
+
     iat = 0
     ncentype = len(centers)
     # loop over species to center on
@@ -70,8 +70,8 @@ cdef void _initsoapmolecule(long nspecies,
                 for ineigh in xrange(nneighmax[spe]):
                     neigh = atom_indexes[spe,ineigh]
                     # compute distance vector
-                    rx = coords[neigh,0] - coords[cen,0] 
-                    ry = coords[neigh,1] - coords[cen,1] 
+                    rx = coords[neigh,0] - coords[cen,0]
+                    ry = coords[neigh,1] - coords[cen,1]
                     rz = coords[neigh,2] - coords[cen,2]
                     r2 = rx**2 + ry**2 + rz**2
                     # within cutoff ?
@@ -79,7 +79,7 @@ cdef void _initsoapmolecule(long nspecies,
                         # central atom ?
                         if neigh == cen:
                             length[iat,ispe,n]  = 0.0
-                            efact[iat,ispe,n]   = 1.0 
+                            efact[iat,ispe,n]   = 1.0
                             harmonic[iat,ispe,0,0,n] = sc.sph_harm(0,0,0,0)
                             nneigh[iat,ispe] = nneigh[iat,ispe] + 1
                             n = n + 1
@@ -92,7 +92,7 @@ cdef void _initsoapmolecule(long nspecies,
                             for lval in xrange(lmax+1):
                                 for im in xrange(2*lval+1):
                                     mval = im-lval
-                                    harmonic[iat,ispe,lval,im,n] = np.conj(sc.sph_harm(mval,lval,ph,th)) 
+                                    harmonic[iat,ispe,lval,im,n] = np.conj(sc.sph_harm(mval,lval,ph,th))
                             nneigh[iat,ispe] = nneigh[iat,ispe] + 1
                             n = n + 1
             iat = iat + 1
@@ -123,7 +123,7 @@ cdef void _initsoapperiodic(long nspecies,
                     ):
 
     # Py_ssize_t is the correct C type for Python array indexes
-    cdef Py_ssize_t icentype,centype,icen,cen,ispe,ineigh,neigh,ia,ib,ic,lval,mval,im,n 
+    cdef Py_ssize_t icentype,centype,icen,cen,ispe,ineigh,neigh,ia,ib,ic,lval,mval,im,n
     cdef double rx,ry,rz,rcx,rcy,rcz,sx,sy,sz,ph,th,r2,rdist,rrx,rry,rrz
 
     nnmax = length.shape[2]
@@ -143,10 +143,10 @@ cdef void _initsoapperiodic(long nspecies,
                 for ineigh in xrange(nneighmax[spe]):
                     neigh = atom_indexes[spe,ineigh]
                     # compute distance vector
-                    rx = coords[neigh,0] - coords[cen,0] 
-                    ry = coords[neigh,1] - coords[cen,1] 
+                    rx = coords[neigh,0] - coords[cen,0]
+                    ry = coords[neigh,1] - coords[cen,1]
                     rz = coords[neigh,2] - coords[cen,2]
-                    # apply pbc 
+                    # apply pbc
                     sx = invcell[0,0]*rx + invcell[0,1]*ry + invcell[0,2]*rz
                     sy = invcell[1,0]*rx + invcell[1,1]*ry + invcell[1,2]*rz
                     sz = invcell[2,0]*rx + invcell[2,1]*ry + invcell[2,2]*rz
@@ -172,7 +172,7 @@ cdef void _initsoapperiodic(long nspecies,
                                     # central atom ?
                                     if neigh == cen and ia==0 and ib==0 and ic==0:
                                         length[iat,ispe,n]  = 0.0
-                                        efact[iat,ispe,n]   = 1.0 
+                                        efact[iat,ispe,n]   = 1.0
                                         harmonic[iat,ispe,0,0,n] = sc.sph_harm(0,0,0,0)
                                         nneigh[iat,ispe] = nneigh[iat,ispe] + 1
                                         n = n + 1
@@ -185,7 +185,7 @@ cdef void _initsoapperiodic(long nspecies,
                                         for lval in xrange(lmax+1):
                                             for im in xrange(2*lval+1):
                                                 mval = im-lval
-                                                harmonic[iat,ispe,lval,im,n] = np.conj(sc.sph_harm(mval,lval,ph,th)) 
+                                                harmonic[iat,ispe,lval,im,n] = np.conj(sc.sph_harm(mval,lval,ph,th))
                                         nneigh[iat,ispe] = nneigh[iat,ispe] + 1
                                         n = n + 1
             iat = iat + 1

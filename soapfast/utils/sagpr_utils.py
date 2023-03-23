@@ -34,7 +34,7 @@ def get_weights(ktrain,vtrain_part,mode,jitter):
                 ktrain = ktrain + jt*np.eye(ln)
                 print("With jitter term %e matrix rank is %i, compared to ideal value of %i."%(jt,np.linalg.matrix_rank(ktrain),ln))
             return scipy.linalg.solve(ktrain,vtrain_part)
-                
+
     else:
         print("INVALID WEIGHTS SOLVING MODE: " + mode)
         sys.exit(0)
@@ -65,7 +65,7 @@ def do_sagpr_spherical(kernel,tens,reg,rank_str='',nat=[],fractrain=1.0,rdm=0,se
     # Get a list of members of the training and testing sets
     ndata = len(tens)
     [ns,nt,ntmax,trrange,terange] = shuffle_data(ndata,sel,rdm,fractrain)
-   
+
     # If we are doing sparsification, set the training range equal to the entire transformed training set
     if (reg_matr != []):
         trrange = list(range(len(tens)))
@@ -179,7 +179,11 @@ def do_prediction_spherical(ktest,rank_str='',weightfile='weights',outfile='pred
 
     # Get weights
     if (weightfile != ''):
-        weights = np.load(weightfile + "_" + rank_str + ".npy",allow_pickle=True)
+        try:
+            weights = np.load(weightfile + "_" + rank_str + ".npy",allow_pickle=True)
+        except UnicodeError as e:
+            weights = np.load(weightfile + "_" + rank_str + ".npy",allow_pickle=True, encoding='latin1')
+
     elif weight_array != []:
         weights = weight_array
     else:

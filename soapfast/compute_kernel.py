@@ -3,11 +3,9 @@
 import time
 import numpy as np
 import itertools
-try:
-    from .utils import parsing,build_kernel,regression_utils
-except ImportError as e:
-    from utils import parsing,build_kernel,regression_utils
-def get_kernel(PS,scale=[],PS0=[None,None],zeta=1,output='',use_hermiticity=False,verbose=True):
+from .utils import parsing,build_kernel,regression_utils
+
+def get_kernel(PS,scale=[],PS0=[None,None],zeta=1,use_hermiticity=False,verbose=True):
 
     start = time.time()
 
@@ -25,15 +23,14 @@ def get_kernel(PS,scale=[],PS0=[None,None],zeta=1,output='',use_hermiticity=Fals
     if (scale==[]):
         for j in range(2):
             scale.append(np.array([1 for i in range(npoints[j])]))
-    # print('scale', scale)
+
     if lam == 0:
 
         # Build scalar kernel
 
         featsize = [len(PS[0][0,0]),len(PS[1][0,0])]
         if (featsize[0] != featsize[1]):
-            print("ERROR: number of features must be the same for the two power spectra!")
-            sys.exit(0)
+            raise RuntimeError(f"number of features must be the same for the two power spectra! {featsize[0]} != {featsize[1]}")
         featsize = featsize[0]
 
         if (verbose):
@@ -60,8 +57,7 @@ def get_kernel(PS,scale=[],PS0=[None,None],zeta=1,output='',use_hermiticity=Fals
 
         featsize = [len(PS[0][0,0,0]),len(PS[1][0,0,0])]
         if (featsize[0] != featsize[1]):
-            print("ERROR: number of features must be the same for the two power spectra!")
-            sys.exit(0)
+            raise RuntimeError("ERROR: number of features must be the same for the two power spectra!")
         featsize = featsize[0]
 
         # Normalize by number of atoms
@@ -86,9 +82,9 @@ def get_kernel(PS,scale=[],PS0=[None,None],zeta=1,output='',use_hermiticity=Fals
             for j in range(i):
                 kreal[i,j] = kreal[j,i].T
 
-    # Save kernel
-    if output != '':
-        np.save(output + str(".npy"),kreal)
+    # # Save kernel
+    # if output != '':
+    #     np.save(output + str(".npy"),kreal)
 
     if (verbose):
         print("Kernel computed", time.time() - start, "seconds")
@@ -97,15 +93,15 @@ def get_kernel(PS,scale=[],PS0=[None,None],zeta=1,output='',use_hermiticity=Fals
 
 ###############################################################################################################################
 
-def main():
+# def main():
 
-    # This is a wrapper that calls python scripts to build lambda-SOAP kernels for use by SA-GPR.
+#     # This is a wrapper that calls python scripts to build lambda-SOAP kernels for use by SA-GPR.
 
-    args = parsing.add_command_line_arguments_kernel("Calculate kernel")
-    [power,scalefac,power0,zt,use_hermiticity] = parsing.set_variable_values_kernel(args)
+#     args = parsing.add_command_line_arguments_kernel("Calculate kernel")
+#     [power,scalefac,power0,zt,use_hermiticity] = parsing.set_variable_values_kernel(args)
 
-    get_kernel(power,scale=scalefac,PS0=power0,zeta=zt,output=args.output,use_hermiticity=use_hermiticity)
+#     get_kernel(power,scale=scalefac,PS0=power0,zeta=zt,output=args.output,use_hermiticity=use_hermiticity)
 
-if __name__=="__main__":
-    from utils import parsing,build_kernel,regression_utils
-    main()
+# if __name__=="__main__":
+    # from utils import parsing,build_kernel,regression_utils
+    # main()
